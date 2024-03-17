@@ -14,6 +14,13 @@ class DetailViewController: UIViewController {
 
     override func loadView() {
         
+        webView = WKWebView()
+        view = webView
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
         guard let detailItem = detailItem else { return }
 
         let html = """
@@ -29,12 +36,5 @@ class DetailViewController: UIViewController {
         """
 
         webView.loadHTMLString(html, baseURL: nil)
-        
-        webView = WKWebView()
-        view = webView
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
     }
 }

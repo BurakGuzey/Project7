@@ -10,6 +10,14 @@ import UIKit
 class ViewController: UITableViewController {
 
     var petitions = [Petition]()
+    var petitionsFiltered = [Petition]()
+    
+    @IBAction func creditsButton(_ sender: UIBarButtonItem) {
+        showCredits()
+    }
+    @IBAction func searchButton(_ sender: UIBarButtonItem) {
+        search()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +41,32 @@ class ViewController: UITableViewController {
         } else {
             showError()
         }
+        
+    }
+    
+    @objc func search(){
+        
+        let ac = UIAlertController(title: "Search", message: "type to search", preferredStyle: .alert)
+        ac.addTextField()
+        
+        let submitAction = UIAlertAction(title: "Search", style: .default) { [weak self, weak ac] action in
+                guard let answer = ac?.textFields?[0].text else { return }
+            print(self?.filter(text: answer))
+            
+            }
+        
+        ac.addAction(submitAction)
+        present(ac, animated: true)
+    
+    }
+    
+    func filter(text: String) -> [Petition]  {
+        for petition in petitions {
+            if petition.body.contains(text) && petition.title.contains(text) {
+                petitionsFiltered.append(petition)
+            }
+        }
+        return petitionsFiltered
     }
     
     func parse(json: Data) {
@@ -47,6 +81,12 @@ class ViewController: UITableViewController {
     
     func showError() {
         let ac = UIAlertController(title: "Loading error", message: "There was a problem loading the feed; please check your connection and try again.", preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "OK", style: .default))
+        present(ac, animated: true)
+    }
+    
+    func showCredits() {
+        let ac = UIAlertController(title: "CREDITS", message: "The data comes from We The People API of the Whitehouse", preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "OK", style: .default))
         present(ac, animated: true)
     }
